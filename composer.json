@@ -1,0 +1,19 @@
+{
+  "name": "tomekpiasecki/hero-game",
+  "authors": [
+    {
+      "name": "Tomasz Piasecki"
+    }
+  ],
+  "require": {
+    "php": "^7.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Tpiasecki\\HeroGame\\": "src/",
+      "Tpiasecki\\HeroGameTest\\": "tests/"
+    }
+  },
+  "minimum-stability": "stable",
+  "require-dev": {}
+}
