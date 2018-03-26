@@ -17,6 +17,7 @@ class HeroFactoryTest extends TestCase
 
     protected function setUp()
     {
+        parent::setUp();
         $this->heroFactory = new HeroFactory();
     }
 

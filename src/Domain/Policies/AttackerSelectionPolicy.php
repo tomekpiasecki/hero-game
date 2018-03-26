@@ -8,7 +8,7 @@ use Tpiasecki\HeroGame\Domain\Characters\CharacterInterface;
 use Tpiasecki\HeroGame\Domain\Factories\LuckBasedPolicyFactory;
 use Tpiasecki\HeroGame\Domain\Factories\SpeedBasedPolicyFactory;
 
-class AttackerSelectionStrategy implements AttackerSelectionPolicyInterface
+class AttackerSelectionPolicy implements AttackerSelectionPolicyInterface
 {
     /**
      * @var CharacterInterface

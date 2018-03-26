@@ -23,6 +23,7 @@ class BeastFactoryTest extends TestCase
 
     protected function setUp()
     {
+        parent::setUp();
         $this->characterType = new CharacterType(CharacterType::TYPE_BEAST);
         $this->beastFactory = new BeastFactory();
     }
