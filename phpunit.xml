@@ -12,9 +12,12 @@
     <filter>
         <whitelist>
             <directory>src</directory>
+            <exclude>
+                <file>src/bootstrap.php</file>
+            </exclude>
         </whitelist>
     </filter>
     <logging>
-        <log type="coverage-html" target="testReports/coverage.html" lowUpperBound="95" highLowerBound="100"/>
+        <log type="coverage-html" target="testReports/coverage.html" lowUpperBound="70" highLowerBound="100"/>
     </logging>
 </phpunit>
