@@ -18,7 +18,8 @@ class BeastFactory
     /**
      * @param RandomnessProviderInterface $randomnessProvider
      */
-    public function __construct(RandomnessProviderInterface $randomnessProvider) {
+    public function __construct(RandomnessProviderInterface $randomnessProvider)
+    {
         $this->randomnessProvider = $randomnessProvider;
     }
 
