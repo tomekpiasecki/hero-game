@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Tpiasecki\HeroGame\Domain\Characters\Beast;
 use Tpiasecki\HeroGame\Domain\Characters\CharacterType;
 use Tpiasecki\HeroGame\Domain\Factories\BeastFactory;
+use Tpiasecki\HeroGame\Infrastructure\RandomnessProviderInterface;
 
 class BeastFactoryTest extends TestCase
 {
@@ -24,8 +25,17 @@ class BeastFactoryTest extends TestCase
     protected function setUp()
     {
         parent::setUp();
+
         $this->characterType = new CharacterType(CharacterType::TYPE_BEAST);
-        $this->beastFactory = new BeastFactory();
+
+        $randomnessProviderMock = $this->prophesize(RandomnessProviderInterface::class);
+        $randomnessProviderMock->randomInt(Beast::HEALTH_MIN, Beast::HEALTH_MAX)->willReturn(Beast::HEALTH_MIN + 2);
+        $randomnessProviderMock->randomInt(Beast::STRENGTH_MIN, Beast::STRENGTH_MAX)->willReturn(Beast::STRENGTH_MIN + 2);
+        $randomnessProviderMock->randomInt(Beast::DEFENCE_MIN, Beast::DEFENCE_MAX)->willReturn(Beast::DEFENCE_MIN + 2);
+        $randomnessProviderMock->randomInt(Beast::SPEED_MIN, Beast::SPEED_MAX)->willReturn(Beast::SPEED_MIN + 2);
+        $randomnessProviderMock->randomInt(Beast::LUCK_MIN, Beast::LUCK_MAX)->willReturn(Beast::LUCK_MIN + 2);
+
+        $this->beastFactory = new BeastFactory($randomnessProviderMock->reveal());
     }
 
     public function testCreatesValidBeast()
