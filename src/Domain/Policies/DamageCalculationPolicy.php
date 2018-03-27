@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tpiasecki\HeroGame\Domain\Policies;
 
 use Tpiasecki\HeroGame\Domain\Characters\CharacterInterface;
+use Tpiasecki\HeroGame\Infrastructure\BattleLoggerInterface;
 
 class DamageCalculationPolicy implements DamageCalculationPolicyInterface
 {
@@ -19,13 +20,23 @@ class DamageCalculationPolicy implements DamageCalculationPolicyInterface
     private $defender;
 
     /**
+     * @var BattleLoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param CharacterInterface $attacker
      * @param CharacterInterface $defender
+     * @param BattleLoggerInterface $logger
      */
-    public function __construct(CharacterInterface $attacker, CharacterInterface $defender)
-    {
+    public function __construct(
+        CharacterInterface $attacker,
+        CharacterInterface $defender,
+        BattleLoggerInterface $logger
+    ) {
         $this->attacker = $attacker;
         $this->defender = $defender;
+        $this->logger = $logger;
     }
 
     /**
@@ -38,8 +49,16 @@ class DamageCalculationPolicy implements DamageCalculationPolicyInterface
         }
 
         $damage = $this->attacker->getStrength() - $this->defender->getDefence();
+        $reducedDamage = $damage;
         foreach ($this->defender->getSkills() as $skill) {
-            $damage = $skill->reduceDamage($damage);
+            $reducedDamage = $skill->reduceDamage($reducedDamage);
+            if ($reducedDamage < $damage) {
+                $this->logger->logDamageReduction(
+                    $this->defender->getName(),
+                    $skill->getName(),
+                    $damage - $reducedDamage
+                );
+            }
         }
 
         return $damage;

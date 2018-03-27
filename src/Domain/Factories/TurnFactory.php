@@ -7,6 +7,7 @@ namespace Tpiasecki\HeroGame\Domain\Factories;
 use Tpiasecki\HeroGame\Domain\Characters\CharacterInterface;
 use Tpiasecki\HeroGame\Domain\Turn;
 use Tpiasecki\HeroGame\Domain\TurnInterface;
+use Tpiasecki\HeroGame\Infrastructure\BattleLoggerInterface;
 
 class TurnFactory implements TurnFactoryInterface
 {
@@ -16,11 +17,20 @@ class TurnFactory implements TurnFactoryInterface
     private $damageCalculationPolicyFactory;
 
     /**
-     * @param DamageCalculationPolicyFactoryInterface $damageCalculationPolicyFactory
+     * @var BattleLoggerInterface
      */
-    public function __construct(DamageCalculationPolicyFactoryInterface $damageCalculationPolicyFactory)
-    {
+    private $logger;
+
+    /**
+     * @param DamageCalculationPolicyFactoryInterface $damageCalculationPolicyFactory
+     * @param BattleLoggerInterface $logger
+     */
+    public function __construct(
+        DamageCalculationPolicyFactoryInterface $damageCalculationPolicyFactory,
+        BattleLoggerInterface $logger
+    ) {
         $this->damageCalculationPolicyFactory = $damageCalculationPolicyFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -30,6 +40,6 @@ class TurnFactory implements TurnFactoryInterface
      */
     public function createTurn(CharacterInterface $attacker, CharacterInterface $defender): TurnInterface
     {
-        return new Turn($attacker, $defender, $this->damageCalculationPolicyFactory);
+        return new Turn($attacker, $defender, $this->damageCalculationPolicyFactory, $this->logger);
     }
 }

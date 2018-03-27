@@ -12,6 +12,11 @@ class MagicShield extends Skill
     protected static $probability = 20;
 
     /**
+     * @var string
+     */
+    protected static $name = 'Magic Shield';
+
+    /**
      * @var int
      */
     protected static $reductionFactor = 2;

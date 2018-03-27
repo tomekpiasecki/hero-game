@@ -18,4 +18,9 @@ interface SkillInterface
      * @return bool
      */
     public function shouldAttackAgain(): bool;
+
+    /**
+     * @return string
+     */
+    public function getName(): string;
 }

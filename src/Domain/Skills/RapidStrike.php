@@ -6,7 +6,15 @@ namespace Tpiasecki\HeroGame\Domain\Skills;
 
 class RapidStrike extends Skill
 {
+    /**
+     * @var int
+     */
     protected static $probability = 10;
+
+    /**
+     * @var string
+     */
+    protected static $name = 'Rapid Strike';
 
     /**
      * @return bool

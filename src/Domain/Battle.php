@@ -7,6 +7,7 @@ namespace Tpiasecki\HeroGame\Domain;
 use Tpiasecki\HeroGame\Domain\Characters\CharacterInterface;
 use Tpiasecki\HeroGame\Domain\Factories\TurnFactoryInterface;
 use Tpiasecki\HeroGame\Domain\Policies\AttackerSelectionPolicyInterface;
+use Tpiasecki\HeroGame\Infrastructure\BattleLoggerInterface;
 
 class Battle implements BattleInterface
 {
@@ -48,32 +49,40 @@ class Battle implements BattleInterface
     private $currentDefender;
 
     /**
+     * @var BattleLoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param CharacterInterface $player1
      * @param CharacterInterface $player2
      * @param AttackerSelectionPolicyInterface $attackerSelectionPolicy
      * @param TurnFactoryInterface $turnFactory
+     * @param BattleLoggerInterface $logger
      */
     public function __construct(
         CharacterInterface $player1,
         CharacterInterface $player2,
         AttackerSelectionPolicyInterface $attackerSelectionPolicy,
-        TurnFactoryInterface $turnFactory
+        TurnFactoryInterface $turnFactory,
+        BattleLoggerInterface $logger
     ) {
         $this->player1 = $player1;
         $this->player2 = $player2;
         $this->attackerSelectionPolicy = $attackerSelectionPolicy;
         $this->turnFactory = $turnFactory;
-        var_dump("p1 {$this->player1->getName()} luck {$this->player1->getLuck()} p1 health {$this->player1->getHealth()} p1 strength {$this->player1->getStrength()} defence {$this->player1->getDefence()}"); //TODO remove
-        var_dump("p2 {$this->player2->getName()} luck {$this->player2->getLuck()} p1 health {$this->player2->getHealth()} p1 strength {$this->player2->getStrength()} defence {$this->player2->getDefence()}"); //TODO remove
+        $this->logger = $logger;
     }
 
     public function start(): void
     {
+        $this->logger->logBattleStart($this->player1->getName(), $this->player2->getName());
+
         while ($this->canContinue()) {
             $this->doTurn();
         }
 
-        $this->displayResult();
+        $this->logResult();
     }
 
     /**
@@ -108,13 +117,12 @@ class Battle implements BattleInterface
     public function doTurn(): void
     {
         $this->numberOfTurns++;
-        var_dump('`````````````````````````````````````');
-        var_dump("Turn {$this->numberOfTurns} begins");
+        $this->logger->logTurnStart($this->numberOfTurns);
 
         $turn = $this->turnFactory->createTurn($this->getCurrentAttacker(), $this->getCurrentDefender());
         $turn->doTurn();
 
-        var_dump("Turn {$this->numberOfTurns} ends");
+        $this->logger->logTurnEnd($this->numberOfTurns);
     }
 
     /**
@@ -153,18 +161,16 @@ class Battle implements BattleInterface
         return $this->currentDefender;
     }
 
-    private function displayResult(): void //TODO rethink name, finish
+    private function logResult(): void
     {
         if ($this->isLimitOfTurnsReached()) {
-            var_dump("Limit of turns reached");
-        } elseif (!$this->areBothPlayersAlive()) {
-            var_dump("One of players is dead");
+            $this->logger->logMessage("Limit of turns reached");
         }
 
         $winner = $this->player1->getHealth() > $this->player2->getHealth() ?
             $this->player1 :
             $this->player2;
 
-        var_dump("The winner is {$winner->getName()}");
+        $this->logger->declareWinner($winner->getName());
     }
 }

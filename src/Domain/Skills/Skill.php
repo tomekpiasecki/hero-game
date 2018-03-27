@@ -14,6 +14,11 @@ abstract class Skill implements SkillInterface
     protected static $probability = 0;
 
     /**
+     * @var string probability of occurrence
+     */
+    protected static $name = '';
+
+    /**
      * @var RandomnessProviderInterface
      */
     protected $randomnessProvider;
@@ -24,6 +29,14 @@ abstract class Skill implements SkillInterface
     public function __construct(RandomnessProviderInterface $randomnessProvider)
     {
         $this->randomnessProvider = $randomnessProvider;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return static::$name;
     }
 
     /**

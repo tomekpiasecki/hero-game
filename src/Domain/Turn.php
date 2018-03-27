@@ -6,6 +6,7 @@ namespace Tpiasecki\HeroGame\Domain;
 
 use Tpiasecki\HeroGame\Domain\Characters\CharacterInterface;
 use Tpiasecki\HeroGame\Domain\Factories\DamageCalculationPolicyFactoryInterface;
+use Tpiasecki\HeroGame\Infrastructure\BattleLoggerInterface;
 
 class Turn implements TurnInterface
 {
@@ -25,31 +26,38 @@ class Turn implements TurnInterface
     private $damageCalculationPolicyFactory;
 
     /**
+     * @var BattleLoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param CharacterInterface $attacker
      * @param CharacterInterface $defender
      * @param DamageCalculationPolicyFactoryInterface $damageCalculationPolicyFactory
+     * @param BattleLoggerInterface $logger
      */
     public function __construct(
         CharacterInterface $attacker,
         CharacterInterface $defender,
-        DamageCalculationPolicyFactoryInterface $damageCalculationPolicyFactory
+        DamageCalculationPolicyFactoryInterface $damageCalculationPolicyFactory,
+        BattleLoggerInterface $logger
     ) {
         $this->attacker = $attacker;
         $this->defender = $defender;
         $this->damageCalculationPolicyFactory = $damageCalculationPolicyFactory;
+        $this->logger = $logger;
     }
 
-    public function doTurn(): void //TODO check
+    public function doTurn(): void
     {
-        var_dump("{$this->attacker->getName()} attacs");
+        $this->logger->logAttack($this->attacker->getName());
         $this->strike();
 
         if (!$this->shouldStrikeAgain()) {
             return;
         }
 
-        var_dump("?! ?! ?! {$this->attacker->getName()} strikes again");
-
+        $this->logger->logDoubleStrike($this->attacker->getName());
         $this->strike();
     }
 
@@ -65,10 +73,14 @@ class Turn implements TurnInterface
 
         $damage = $damageCalculationPolicy->calculateDamage();
         if ($damage == 0) {
-            var_dump("!!! oh no {$this->attacker->getName()} misses");
-        } else {
-            $this->defender->applyDamage($damage);
-            var_dump("{$this->defender->getName()} looses $damage of health {$this->defender->getHealth()} remains");
+            $this->logger->logMiss();
+            return;
+        }
+
+        $this->defender->applyDamage($damage);
+        $this->logger->logHit($this->defender->getName(), $damage, $this->defender->getHealth());
+        if (!$this->isDefenderAlive()) {
+            $this->logger->logDeath($this->defender->getName());
         }
     }
 
@@ -79,7 +91,7 @@ class Turn implements TurnInterface
      */
     private function shouldStrikeAgain(): bool
     {
-        if (!$this->defender->isAlive()) {
+        if (!$this->isDefenderAlive()) {
             return false;
         }
 
@@ -90,5 +102,13 @@ class Turn implements TurnInterface
         }
 
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isDefenderAlive(): bool
+    {
+        return $this->defender->isAlive();
     }
 }
