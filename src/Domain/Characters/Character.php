@@ -55,7 +55,6 @@ abstract class Character implements CharacterInterface
     private $randomnessProvider;
 
     /**
-     * Character constructor.
      * @param int $health
      * @param int $strength
      * @param int $defence

@@ -19,7 +19,6 @@ abstract class Skill implements SkillInterface
     protected $randomnessProvider;
 
     /**
-     * Skill constructor.
      * @param RandomnessProviderInterface $randomnessProvider
      */
     public function __construct(RandomnessProviderInterface $randomnessProvider)

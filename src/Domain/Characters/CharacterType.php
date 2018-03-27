@@ -23,7 +23,6 @@ class CharacterType
     private $type;
 
     /**
-     * CharacterType constructor.
      * @param string $type
      */
     public function __construct(string $type)
