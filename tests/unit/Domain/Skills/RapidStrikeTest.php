@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tpiasecki\HeroGameTest\unit\Domain\Skills;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Tpiasecki\HeroGame\Domain\Skills\RapidStrike;
 use Tpiasecki\HeroGame\Infrastructure\RandomnessProviderInterface;
 
@@ -59,7 +60,7 @@ class RapidStrikeTest extends TestCase
     private function getInstance($luckyDrawValue = 0): RapidStrike
     {
         $randomnessProvider = $this->prophesize(RandomnessProviderInterface::class);
-        $randomnessProvider->randomInt(1, 100)->willReturn($luckyDrawValue);
+        $randomnessProvider->randomInt(Argument::any(), Argument::any())->willReturn($luckyDrawValue);
         $randomnessProvider = $randomnessProvider->reveal();
         return new RapidStrike($randomnessProvider);
     }
