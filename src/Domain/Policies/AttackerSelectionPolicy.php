@@ -43,6 +43,8 @@ class AttackerSelectionPolicy implements AttackerSelectionPolicyInterface
     /**
      * @param CharacterInterface $player1
      * @param CharacterInterface $player2
+     * @param SpeedBasedPolicyFactory $speedBasedPolicyFactory
+     * @param LuckBasedPolicyFactory $luckBasedPolicyFactory
      */
     public function __construct(
         CharacterInterface $player1,
@@ -58,16 +60,25 @@ class AttackerSelectionPolicy implements AttackerSelectionPolicyInterface
         $this->selectAttacker();
     }
 
+    /**
+     * @return CharacterInterface
+     */
     public function getAttacker(): CharacterInterface
     {
         return $this->attacker;
     }
 
+    /**
+     * @return CharacterInterface
+     */
     public function getDefender(): CharacterInterface
     {
         return $this->defender;
     }
 
+    /**
+     * Selects player that should start the first tour
+     */
     private function selectAttacker(): void
     {
         try {
