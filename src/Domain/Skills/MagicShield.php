@@ -6,5 +6,23 @@ namespace Tpiasecki\HeroGame\Domain\Skills;
 
 class MagicShield extends Skill
 {
+    /**
+     * @var int
+     */
     protected static $probability = 20;
+
+    /**
+     * @var int
+     */
+    protected static $reductionFactor = 2;
+
+
+    public function reduceDamage(int $damage): int
+    {
+        if (!$this->shouldOccur()) {
+            return $damage;
+        }
+
+        return (int) ($damage / self::$reductionFactor);
+    }
 }
