@@ -58,6 +58,7 @@ class HeroFactory
             $this->randomnessProvider->randomInt(Hero::LUCK_MIN, Hero::LUCK_MAX),
             $name,
             $type,
+            $this->randomnessProvider,
             $skills
         );
     }

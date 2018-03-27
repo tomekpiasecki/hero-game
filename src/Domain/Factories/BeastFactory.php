@@ -32,7 +32,8 @@ class BeastFactory
             $this->randomnessProvider->randomInt(Beast::SPEED_MIN, Beast::SPEED_MAX),
             $this->randomnessProvider->randomInt(Beast::LUCK_MIN, Beast::LUCK_MAX),
             $name,
-            $type
+            $type,
+            $this->randomnessProvider
         );
     }
 }

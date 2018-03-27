@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tpiasecki\HeroGame\Domain\Characters;
 
+use Tpiasecki\HeroGame\Domain\Skills\SkillInterface;
+use Tpiasecki\HeroGame\Infrastructure\RandomnessProviderInterface;
+
 abstract class Character implements CharacterInterface
 {
     /**
@@ -47,6 +50,11 @@ abstract class Character implements CharacterInterface
     private $skills;
 
     /**
+     * @var RandomnessProviderInterface
+     */
+    private $randomnessProvider;
+
+    /**
      * Character constructor.
      * @param int $health
      * @param int $strength
@@ -55,7 +63,8 @@ abstract class Character implements CharacterInterface
      * @param int $luck
      * @param string $name
      * @param CharacterType $type
-     * @param array $skills
+     * @param RandomnessProviderInterface $randomnessProvider
+     * @param SkillInterface[] $skills
      */
     public function __construct(
         int $health,
@@ -65,6 +74,7 @@ abstract class Character implements CharacterInterface
         int $luck,
         string $name,
         CharacterType $type,
+        RandomnessProviderInterface $randomnessProvider,
         array $skills = []
     ) {
         $this->health = $health;
@@ -75,6 +85,7 @@ abstract class Character implements CharacterInterface
         $this->name = $name;
         $this->type = $type;
         $this->skills = $skills;
+        $this->randomnessProvider = $randomnessProvider;
     }
 
     /**
@@ -139,5 +150,39 @@ abstract class Character implements CharacterInterface
     public function getSkills(): array
     {
         return $this->skills;
+    }
+
+    /**
+     * @param int $damage
+     */
+    public function applyDamage(int $damage): void
+    {
+        $this->health -= ($damage <= $this->health ? $damage : $this->health);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAlive(): bool
+    {
+        return $this->health > 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLucky(): bool
+    {
+        $luckyDraw = $this->randomnessProvider->randomInt(1, 100);
+        return $luckyDraw <= $this->luck;
+    }
+
+    /**
+     * @param CharacterInterface $character
+     * @return bool
+     */
+    public function equals(CharacterInterface $character): bool
+    {
+        return $this->type->equals($character->getType()) && $this->name === $character->getName();
     }
 }

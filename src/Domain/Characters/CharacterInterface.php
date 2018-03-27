@@ -45,4 +45,25 @@ interface CharacterInterface
      * @return SkillInterface[]
      */
     public function getSkills(): array;
+
+    /**
+     * @param int $damage
+     */
+    public function applyDamage(int $damage): void;
+
+    /**
+     * @return bool
+     */
+    public function isAlive(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isLucky(): bool;
+
+    /**
+     * @param CharacterInterface $character
+     * @return bool
+     */
+    public function equals(CharacterInterface $character): bool;
 }
