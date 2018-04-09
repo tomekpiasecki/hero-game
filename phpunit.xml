@@ -6,7 +6,8 @@
 >
     <testsuites>
         <testsuite name="service">
-            <directory phpVersion="7.1.15">tests/unit</directory>
+            <directory>tests/unit</directory>
+            <directory>tests/integration</directory>
         </testsuite>
     </testsuites>
     <filter>
