@@ -85,6 +85,7 @@ class AttackerSelectionPolicy implements AttackerSelectionPolicyInterface
             $speedPolicy = $this->speedBasedPolicyFactory->createPolicy($this->player1, $this->player2);
             $this->attacker = $speedPolicy->getAttacker();
             $this->defender = $speedPolicy->getDefender();
+            return;
         } catch (NotAbleToSelectAttackerException $ex) {
         }
 
