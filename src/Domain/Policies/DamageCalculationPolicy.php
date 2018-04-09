@@ -60,19 +60,21 @@ class DamageCalculationPolicy implements DamageCalculationPolicyInterface
      */
     private function applyDefenderSkills(int $damage) : int
     {
-        $reducedDamage = $damage;
+        $lastIterationDamage = $damage;
         foreach ($this->defender->getSkills() as $skill) {
-            $reducedDamage = $skill->reduceDamage($reducedDamage);
-            if ($reducedDamage < $damage) {
+            $reducedDamage = $skill->reduceDamage($lastIterationDamage);
+            if ($reducedDamage < $lastIterationDamage) {
                 $this->logger->logDamageReduction(
                     $this->defender->getName(),
                     $skill->getName(),
-                    $damage - $reducedDamage
+                    $lastIterationDamage - $reducedDamage
                 );
+
+                $lastIterationDamage = $reducedDamage;
             }
         }
 
-        return $reducedDamage;
+        return $lastIterationDamage;
     }
 
     /**
