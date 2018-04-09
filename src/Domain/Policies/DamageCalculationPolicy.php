@@ -49,6 +49,17 @@ class DamageCalculationPolicy implements DamageCalculationPolicyInterface
         }
 
         $damage = $this->attacker->getStrength() - $this->defender->getDefence();
+        $damage = $damage >= 0 ? $damage : 0;
+
+        return $this->applyDefenderSkills($damage);
+    }
+
+    /**
+     * @param int $damage
+     * @return int damage modified by defender skills
+     */
+    private function applyDefenderSkills(int $damage) : int
+    {
         $reducedDamage = $damage;
         foreach ($this->defender->getSkills() as $skill) {
             $reducedDamage = $skill->reduceDamage($reducedDamage);
@@ -61,7 +72,7 @@ class DamageCalculationPolicy implements DamageCalculationPolicyInterface
             }
         }
 
-        return $damage;
+        return $reducedDamage;
     }
 
     /**
